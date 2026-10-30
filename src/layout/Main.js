@@ -1,7 +1,8 @@
-import "./Main.css";
+п»їimport "./Main.css";
 import React from "react";
 import MovieList from "../components/MovieList";
 import Preloader from "../components/Preloader";
+import Search from "../components/Search.js";
 
 class Main extends React.Component
 {
@@ -16,16 +17,22 @@ class Main extends React.Component
             .then(response => response.json())
             .then(data => this.setState({movies:data.Search}));
     }
-
+    searchMovie = (str) =>
+    {
+        fetch(`http://www.omdbapi.com/?s=${str}&apikey=4ed5c14e`)
+            .then(response => response.json())
+            .then(data => this.setState({ movies: data.Search }));
+    }
     render()
     {
         return (
             <div className="main">
+                <Search searchMovie={this.searchMovie} />
                 {
-                //Благодаря фигурным скобочкам ({) - мы можем писать функции 
-                    //сравения прямо в разметке
+                //Р‘Р»Р°РіРѕРґР°СЂСЏ С„РёРіСѓСЂРЅС‹Рј СЃРєРѕР±РѕС‡РєР°Рј ({) - РјС‹ РјРѕР¶РµРј РїРёСЃР°С‚СЊ С„СѓРЅРєС†РёРё 
+                    //СЃСЂР°РІРµРЅРёСЏ РїСЂСЏРјРѕ РІ СЂР°Р·РјРµС‚РєРµ
                     this.state.movies.length == 0 ? <Preloader /> : 
-                    <MovieList movies={this.state.movies} />
+                        <MovieList movies={this.state.movies} />
                 }
             </div>
         )
