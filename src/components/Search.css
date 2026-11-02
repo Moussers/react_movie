@@ -1,6 +1,9 @@
 ﻿.search
 {
     margin: 45px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
     .search input 
     {
@@ -15,3 +18,14 @@
             outline: none;
             border-bottom: solid 1px gray;
         }
+
+    .search > button 
+    {
+        background-color: white;
+        color: white;
+        width: 50px;
+        height: 32px;
+        font-size: 24px;
+        border: none;
+        /*border-radius: 8px;*/
+    }

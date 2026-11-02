@@ -17,9 +17,12 @@ class Main extends React.Component
             .then(response => response.json())
             .then(data => this.setState({movies:data.Search}));
     }
-    searchMovie = (str) =>
+    searchMovie = (str, type = 'all') =>
     {
-        fetch(`http://www.omdbapi.com/?s=${str}&apikey=4ed5c14e`)
+        fetch
+            (
+                `http://www.omdbapi.com/?s=${str}${type !== 'all' ? `&type=${type}` : ''}&apikey=4ed5c14e`
+            )
             .then(response => response.json())
             .then(data => this.setState({ movies: data.Search }));
     }
@@ -31,7 +34,8 @@ class Main extends React.Component
                 {
                 //Благодаря фигурным скобочкам ({) - мы можем писать функции 
                     //сравения прямо в разметке
-                    this.state.movies.length == 0 ? <Preloader /> : 
+                    this.state.movies == null ? <h1>Nothing</h1> :
+                        this.state.movies.length == 0 ? <Preloader /> : 
                         <MovieList movies={this.state.movies} />
                 }
             </div>
