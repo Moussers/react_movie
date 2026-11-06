@@ -7,13 +7,20 @@ class Search extends React.Component
         {
             search: "",
             type:   "all",
-            page:   1
+            page: 1,
+            //totalPages: 1
         }
+    //componentDidMount()
+    //{
+    //    let itemsPerPages = 10;
+    //    this.setState({ totalPages: Math.ceil(this.props.totalCount / itemsPerPages) })
+    //}
     handleKey = (event) =>
     {
         if (event.key === 'Enter')
         {
             this.props.searchMovie(this.state.search, this.state.type);
+            this.setState({ page: 1 });
         }
     }
     handleFilter = (event) =>
@@ -21,7 +28,7 @@ class Search extends React.Component
         this.setState
             (
                 () => ({ type:      event.target.dataset.type }),
-                () => ({ search:    this.props.searchMovie(this.state.search, this.state.type) })
+                () => ({ search: this.props.searchMovie(this.state.search, this.state.type) }),
             )
     }
 
@@ -41,13 +48,33 @@ class Search extends React.Component
                 () => { this.props.searchMovie(this.state.search, this.state.type, this.state.page) }
         )
     }
+    setPage = (pageNumber) =>
+    {
+        this.setState
+            (
+                () => ({ page: pageNumber }),
+                () => (this.props.searchMovie(this.state.search, this.state.type, this.state.page))
+            )
+    }
+
     render()
     {
         let itemsPerPage = 10;
         let totalPages = Math.ceil(this.props.totalCount / itemsPerPage);
-        //ceil -  округляет до ближайшего числа в большую сторону
-        //floor - округляет до ближайшего числа в меньшую сторону
-        //ceiling
+        //round - округляет к ближайшему целому значению;
+        //std::round(-1.5f)  -> Вывод: 2.0f   //f - float
+        //ceil -  округляет до ближайшего числа в большую сторону, и возврщает число с плавающей точкой;
+        //std::ceil(2.5)  -> Вывод: 3.0
+        //std::ceil(-2.5)  -> Вывод: -2.0
+        //floor - округляет до ближайшего числа в меньшую сторону, и возврщает число с плавающей точкой;
+        //std::ceil(2.5)  -> Вывод: 3.0
+        //std::ceil(-2.5)  -> Вывод: 2.0
+        //ceiling - округляет всегда в большую сторону;
+        //trunc - округляет аргумент до нуля и возвращает ближайшее целое значение, то есть обрезает 
+        //дробную часть.
+        //trunc(10.25)  -> Вывод: 10
+        //trunc(-34.251)  -> Вывод: 34
+        //trunc(15)  -> Вывод: 15
 
         let number = [];
         for (let i = 0; i < totalPages; i++)
@@ -65,7 +92,11 @@ class Search extends React.Component
                     <button className="btn"
                         onClick=
                         {
-                            () => this.props.searchMovie(this.state.search, this.state.type)
+                            () =>
+                            {
+                                this.props.searchMovie(this.state.search, this.state.type);
+                                this.setState({ page: 1 });
+                            }
                         }
                         >
                         &#128269;
@@ -116,7 +147,9 @@ class Search extends React.Component
                                 (
                                     (element, index) =>
                                     (
-                                        <button className={element == this.state.page ? "btn-current-page" : ""}>
+                                        <button className={element == this.state.page ? "btn-current-page" : ""}
+                                            onClick={() => (this.setPage(element))}
+                                        >
                                             {element}
                                         </button>
                                     )
