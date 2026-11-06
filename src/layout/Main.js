@@ -8,29 +8,34 @@ class Main extends React.Component
 {
     state =
     {
-        movies:[]
+            movies: [],
+            count: 0
     }
     componentDidMount()
     {
-        
-        fetch('http://www.omdbapi.com/?s=Terminator&apikey=4ed5c14e')
+        this.searchMovie('Terminator');
+        /*fetch('http://www.omdbapi.com/?s=Terminator&apikey=4ed5c14e')
             .then(response => response.json())
-            .then(data => this.setState({movies:data.Search}));
+            .then(data => this.setState({movies:data.Search}));*/
+        /*fetch('http://www.omdbapi.com/?s=Terminator$type=all&page=1&apikey=4ed5c14e')
+            .then(response => response.json())
+            .then(data => this.setState({movies:data.Search}));*/
     }
-    searchMovie = (str, type = 'all') =>
+    searchMovie = (str, type = 'all', page=1) =>
     {
         fetch
             (
-                `http://www.omdbapi.com/?s=${str}${type !== 'all' ? `&type=${type}` : ''}&apikey=4ed5c14e`
+                `http://www.omdbapi.com/?s=${str}${type !== 'all' ? `&type=${type}` : ''}&page=${page}&apikey=4ed5c14e`
             )
             .then(response => response.json())
-            .then(data => this.setState({ movies: data.Search }));
+            .then(data => this.setState({ movies: data.Search, count: data.totalResults }));
+            //.then(data => this.setState({ movies: data.Search }));
     }
     render()
     {
         return (
             <div className="main">
-                <Search searchMovie={this.searchMovie} />
+                <Search searchMovie={this.searchMovie} totalCount={this.state.count} />
                 {
                 //Благодаря фигурным скобочкам ({) - мы можем писать функции 
                     //сравения прямо в разметке
