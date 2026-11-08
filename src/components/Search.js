@@ -42,9 +42,10 @@ class Search extends React.Component
     }
     nextPage = () =>
     {
+        
         this.setState
             (
-                () => ({ page: this.state.page + 1 }),
+                () => (this.state.page < 16 ? { page: this.state.page + 1 } : {page: 16}),
                 () => { this.props.searchMovie(this.state.search, this.state.type, this.state.page) }
         )
     }
@@ -57,10 +58,19 @@ class Search extends React.Component
             )
     }
 
+    getNum = (num) => {
+        let l = num - 5
+        if (l < 0) {
+            l = 0
+        }
+        return l
+    }
+
     render()
     {
         let itemsPerPage = 10;
         let totalPages = Math.ceil(this.props.totalCount / itemsPerPage);
+        //totalPages = itemsPerPage;
         //round - округляет к ближайшему целому значению;
         //std::round(-1.5f)  -> Вывод: 2.0f   //f - float
         //ceil -  округляет до ближайшего числа в большую сторону, и возврщает число с плавающей точкой;
@@ -75,11 +85,13 @@ class Search extends React.Component
         //trunc(10.25)  -> Вывод: 10
         //trunc(-34.251)  -> Вывод: 34
         //trunc(15)  -> Вывод: 15
-
+        
         let number = [];
         for (let i = 0; i < totalPages; i++)
-            number.push(i+1);
+            number.push(i + 1);
 
+        //let start = (this.state.page-1) > 10 ? (this.state.page-1) - 10 : this.state.page;
+        //let end = this.state.page <= 10 ? 10 : this.state.page;
         return (
             <>
                 <div className="search">
@@ -141,20 +153,27 @@ class Search extends React.Component
                         Prev
                     </button>
                     <div className="items">
+                        {(this.state.page - 5 > 1) ? "..." : ""}
                         {
+                            
                             number.slice(0, totalPages)
                                 .map
                                 (
                                     (element, index) =>
                                     (
-                                        <button className={element == this.state.page ? "btn-current-page" : ""}
+                                        (element >= ((this.state.page - 5 > 0) ? this.state.page - 5 : 1) && element <= ((this.state.page - 5 > 0) ? this.state.page +4 : 10)) ?                                    
+                                            //левое выражение массив двигаем влево;
+                                            //правое выражение массив двигаем вправо;
+                                            <button className={element == this.state.page ? "btn-current-page" : ""}
                                             onClick={() => (this.setPage(element))}
                                         >
                                             {element}
-                                        </button>
+                                        </button> : ""
                                     )
-                                )
+                        )
+                        
                         }
+                        {(this.state.page + 4 < totalPages) ? "..." : ""}
                     </div>
                     <button className="btn" onClick={this.nextPage}>
                         Next
@@ -166,4 +185,5 @@ class Search extends React.Component
 }
 export default Search;
 
+//{} - фигурные скобки для принятия выреажения
 
