@@ -45,8 +45,8 @@ class Search extends React.Component
         
         this.setState
             (
-                () => (this.state.page < 16 ? { page: this.state.page + 1 } : {page: 16}),
-                () => { this.props.searchMovie(this.state.search, this.state.type, this.state.page) }
+                () => (this.state.page < Math.ceil(this.props.totalCount / 10) ? { page: this.state.page + 1 } : { page: Math.ceil(this.props.totalCount / 10) }),
+                () => {this.props.searchMovie(this.state.search, this.state.type, this.state.page) }
         )
     }
     setPage = (pageNumber) =>
@@ -90,8 +90,6 @@ class Search extends React.Component
         for (let i = 0; i < totalPages; i++)
             number.push(i + 1);
 
-        //let start = (this.state.page-1) > 10 ? (this.state.page-1) - 10 : this.state.page;
-        //let end = this.state.page <= 10 ? 10 : this.state.page;
         return (
             <>
                 <div className="search">
